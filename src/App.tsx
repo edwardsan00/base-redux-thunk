@@ -1,7 +1,7 @@
 import React, { FunctionComponent } from 'react'
 import { CssBaseline } from '@material-ui/core'
 import RouterMain from './routers'
-import CssGlobal from './utils/CssGlobal'
+import CssGlobal from 'utils/CssGlobal'
 
 
 const App: FunctionComponent = (): JSX.Element => {

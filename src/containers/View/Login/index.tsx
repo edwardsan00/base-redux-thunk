@@ -6,7 +6,6 @@ import { getUsers } from 'reducers/userDucks'
 const Login: FunctionComponent = (): JSX.Element => {
   const dispatch = useDispatch()
   const users = useSelector<RootState>(state => state.users) || {}
-  console.log("users", users)
 
   useEffect(() => {
     dispatch(getUsers())

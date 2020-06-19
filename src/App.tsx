@@ -10,15 +10,13 @@ const store = generateStore()
 
 const App: FunctionComponent = (): JSX.Element => {
   return (
-    <>
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <CssGlobal />
-      <Provider store={store}>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <CssGlobal />
         <RouterMain />
-      </Provider>
-    </ThemeProvider>
-    </>
+      </ThemeProvider>
+    </Provider>
   )
 }
 

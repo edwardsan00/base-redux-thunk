@@ -1,9 +1,10 @@
 import React, { FunctionComponent, useEffect, useRef } from 'react'
-import { useDispatch, /*useSelector*/ } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useHistory, useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-// import { RootState } from 'reducers'
+import { RootState } from 'reducers'
 import { makeStyles, Typography, Button, FormControl, OutlinedInput, Theme, FormHelperText } from '@material-ui/core'
-import { getUsers } from 'reducers/userDucks'
+import { getUser } from 'reducers/userDucks'
 
 interface Login {
   user: string
@@ -62,19 +63,25 @@ const useStyles = makeStyles(({ spacing, palette }: Theme) => ({
 const Login: FunctionComponent = (): JSX.Element => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const history = useHistory()
+  const location = useLocation()
   const formLogin = useRef<HTMLFormElement>(null)
-  // const users = useSelector<RootState>(state => state.users) || {}
+  const { status, user } = useSelector((state: RootState) => state.user)
   const { register, handleSubmit, errors } = useForm<Login>()
 
   const onSubmit = handleSubmit(({ password, user }) => {
     console.log("onSubmit -> password", password)
     console.log("onSubmit -> user", user)
+    dispatch(getUser())
   })
 
-
   useEffect(() => {
-    dispatch(getUsers())
-  }, [dispatch])
+    if(status === 'READY' && user.id){
+      localStorage.setItem('isLogin', JSON.stringify(true))
+      history.push(location.pathname.replace('login', 'dashboard'))
+    }
+  })
+
   return (
     <div className={classes.containerLogin}>
       <img 

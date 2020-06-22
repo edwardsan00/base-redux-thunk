@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react'
+import React, { FunctionComponent, useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import clsx from 'clsx'
 import { makeStyles, Typography, ExpansionPanelDetails, Theme, withStyles } from '@material-ui/core'
@@ -52,6 +52,13 @@ const useStyles = makeStyles(({ palette, spacing }: Theme ) => ({
   containerLogo: {
     height: 120
   },
+  logo: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain',
+    objectPosition: 'center',
+    backgroundColor: palette.primary.main
+  },
   expansionPanel: {
     backgroundColor: palette.primary.main,
     '&:hover': {
@@ -70,6 +77,7 @@ const useStyles = makeStyles(({ palette, spacing }: Theme ) => ({
   linkNested: {
     textDecoration: 'none',
     display: 'block',
+    width: '100%',
     color: palette.common.white 
   },
   linkRoute: {
@@ -86,11 +94,11 @@ const useStyles = makeStyles(({ palette, spacing }: Theme ) => ({
   activeLink: {
     backgroundColor: palette.primary.dark
   }
-}))
+}), { name: 'Sidebar' })
 
 const Sidebar: FunctionComponent = (): JSX.Element => {
   const classes = useStyles()
-  const location = useLocation()
+  const { pathname } = useLocation()
   const [ expanded, setExpanded ] = useState<string | false>(false)
   const [ selected, setSelected ] = useState<number | null>(null)
 
@@ -101,11 +109,11 @@ const Sidebar: FunctionComponent = (): JSX.Element => {
   return (
     <div className={classes.containerSidebar}>
       <div className={classes.containerLogo}>
-
+        <img className={classes.logo} src="https://gglassday.com/wp-content/uploads/2017/12/Airbnb-new-logo-2014-compressor.png" alt="Logo" />
       </div>
       { routes.length ? routes.map(({ label, path, dropDown }, indexI) => {
         return path && !dropDown?.length ? (
-          <Link to={path} key={label} className={clsx([classes.linkRoute, location.pathname === path && classes.activeLink])}><Typography variant="body1">{label}</Typography></Link>
+          <Link to={path} onClick={() => selected !== null && setSelected(null)} key={label} className={clsx([classes.linkRoute, pathname === path && classes.activeLink])}><Typography variant="body1">{label}</Typography></Link>
         ) : (
           <ExpansionPanel key={label} className={clsx([classes.expansionPanel, indexI === selected && classes.activeLink])} square expanded={expanded === 'panel1'} onChange={handlerExpanded('panel1')}>
             <ExpansionPanelSummary
@@ -116,7 +124,7 @@ const Sidebar: FunctionComponent = (): JSX.Element => {
             </ExpansionPanelSummary>
             <ExpansionPanelDetails className={classes.panelDetail}>
                 {dropDown?.length ? dropDown.map(({ label, path = '/dashboard' }) => {
-                  location.pathname === path && selected === null && setSelected(indexI) 
+                  pathname === path && selected === null && setSelected(indexI) 
                   return <Link key={label} to={path} className={classes.linkNested}>{label}</Link>
                 }) : null }
             </ExpansionPanelDetails>

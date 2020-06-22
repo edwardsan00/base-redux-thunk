@@ -4,7 +4,8 @@ import {
   FormControl,
   OutlinedInput,
   FormHelperText,
-  TableContainer, Table, TableHead, TableCell, TableRow, Button, TableSortLabel, TableBody, Theme, Typography } from '@material-ui/core'
+  Button,
+  TableContainer, Table, TableHead, TableCell, TableRow, TableSortLabel, TableBody, Theme, Typography } from '@material-ui/core'
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
@@ -16,6 +17,7 @@ import { RootState } from 'reducers'
 import { Administrator, getAdministrators } from 'reducers/administratorsDucks'
 import DrawerEdit from 'components/DrawerEdit'
 import Confirm from 'components/Common/Confirm'
+import HeaderSection from 'components/Common/HeaderSection'
 
 interface HeaderKeys {
   label: string
@@ -26,18 +28,6 @@ interface HeaderKeys {
 const useStyles = makeStyles(({ palette, spacing }: Theme) => ({
   containerAdmin: {
 
-  },
-  headerAdmin: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: spacing(2)
-  },
-  title: {
-    fontSize: '26px',
-    lineHeight: '32px',
-    color: palette.primary.main,
-    margin: 0,
   },
   containerTable: {
     backgroundColor: palette.common.white
@@ -136,10 +126,9 @@ const Adminstrators = () => {
 
   return (
     <div className={classes.containerAdmin}>
-      <div className={classes.headerAdmin}>
-        <h2 className={classes.title}>Adminstradores</h2>
+      <HeaderSection title="Administradores">
         <Button variant="contained" color="primary">Agregar Nuevo</Button>
-      </div>
+      </HeaderSection>
       <div className={classes.containerTable}>
         <TableContainer>
           <Table
@@ -193,6 +182,7 @@ const Adminstrators = () => {
               <OutlinedInput
                 defaultValue={editAdmin.first_name}
                 name="first_name"
+                error={Boolean(errors?.first_name?.message)}
                 inputRef={register({
                   required: {
                     value: true,
@@ -209,6 +199,7 @@ const Adminstrators = () => {
               <OutlinedInput
                 defaultValue={editAdmin.last_name}
                 name="last_name"
+                error={Boolean(errors?.last_name?.message)}
                 inputRef={register({
                   required: {
                     value: true,

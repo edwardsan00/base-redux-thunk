@@ -8,6 +8,7 @@ import clsx from 'clsx'
 import { Administrator, getAdministrators } from 'reducers/administratorsDucks'
 import { RootState } from 'reducers'
 import { useSelector, useDispatch } from 'react-redux'
+import HeaderSection from 'components/Common/HeaderSection'
 
 interface HeaderKeys {
   label: string
@@ -15,21 +16,9 @@ interface HeaderKeys {
   key: keyof Administrator
 }
 
-const useStyles = makeStyles(({ palette, spacing }: Theme) => ({
+const useStyles = makeStyles(({ palette }: Theme) => ({
   containerAdmin: {
 
-  },
-  headerAdmin: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: spacing(2)
-  },
-  title: {
-    fontSize: '26px',
-    lineHeight: '32px',
-    color: palette.primary.main,
-    margin: 0,
   },
   containerTable: {
     backgroundColor: palette.common.white
@@ -90,10 +79,9 @@ const Adminstrators = () => {
 
   return (
     <div className={classes.containerAdmin}>
-      <div className={classes.headerAdmin}>
-        <h2 className={classes.title}>Usuarios</h2>
+      <HeaderSection title="Usuarios">
         <Button variant="contained" color="primary">Agregar Nuevo</Button>
-      </div>
+      </HeaderSection>
       <div className={classes.containerTable}>
         <TableContainer>
           <Table

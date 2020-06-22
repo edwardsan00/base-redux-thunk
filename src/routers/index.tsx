@@ -19,6 +19,11 @@ const Dashboard = loadable(() => import('../containers/View/Dashboard'), {
   fallback: <Loading />
 })
 
+const Users = loadable(() => import('../containers/View/Callcenter/Users'), {
+  fallback: <Loading />
+})
+
+
 const Adminstrators = loadable(() => import('../containers/View/Administrators'), {
   fallback: <Loading />
 })
@@ -49,6 +54,7 @@ const RouterMain = () => {
             <Route path="/dashboard" exact component={Dashboard} />
             <Route path="/administrators" exact component={Adminstrators} />
             <Route path="/profile" exact component={Profile} />
+            <Route path='/call-center/users' component={Users}></Route>
             <Route component={() => <Redirect to="/404" />} />
           </Switch>
         </Admin>

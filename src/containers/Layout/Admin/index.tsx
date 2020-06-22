@@ -24,6 +24,9 @@ const useStyles = makeStyles(({ palette }: Theme ) => ({
     height: '100%'
   },
   containerBox: {
+    display: 'flex',
+    flexDirection: 'column',
+    flex: 1,
     width: 'calc(100% - 40px)',
     margin: '20px auto',
     overflow: 'auto',
@@ -43,7 +46,7 @@ const Admin: FunctionComponent = ({ children }): JSX.Element => {
       if(!userId)
         dispatch(getUser())
     } else {
-      history.push(location.pathname.replace('dashboard', 'login'))
+      history.push('/login')
     }
   }, [dispatch, history, location.pathname, userId])
 

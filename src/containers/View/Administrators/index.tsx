@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { RootState } from 'reducers'
 import { Administrator, getAdministrators } from 'reducers/administratorsDucks'
 import DrawerEdit from 'components/DrawerEdit'
+import Confirm from 'components/Common/Confirm'
 
 interface HeaderKeys {
   label: string
@@ -106,6 +107,7 @@ const Adminstrators = () => {
   const formLogin = useRef<HTMLFormElement>(null)
   const dispatch = useDispatch()
   const [openDrawer, setOpenDrawer ] = useState(true)
+  const [openConfirm, setOpenConfirm] = useState<boolean>(false)
   const [ editAdmin, setEditAdmin ] = useState<Administrator | null>(null)
   const { administrators } = useSelector((state: RootState) => state.administrators)
 
@@ -169,7 +171,7 @@ const Adminstrators = () => {
                     <TableCell>{email}</TableCell>
                     <TableCell align="center" className={classes.tableCellEdit}>
                       <EditIcon className={clsx([classes.editIcon, classes.icons])} onClick={() => handlerToggleDrawer(id)} />
-                      <DeleteIcon className={clsx([classes.icons])} />
+                      <DeleteIcon onClick={() => setOpenConfirm(true)} className={clsx([classes.icons])} />
                     </TableCell>
                   </TableRow>
                 ))
@@ -181,7 +183,7 @@ const Adminstrators = () => {
 
       { openDrawer && editAdmin ? (
         <DrawerEdit 
-          title='Editar Call center' 
+          title='Editar Administrador' 
           onHandlerToggleDrawer={handlerToggleDrawer} 
           onHandlerAction={handlerEditAdmin} 
           openDrawer={openDrawer}>
@@ -239,6 +241,16 @@ const Adminstrators = () => {
           </form>
         </DrawerEdit>
       ) : null }
+
+      {
+        openConfirm ? (
+          <Confirm 
+            openConfirm={openConfirm} 
+            title='¿Desea eliminar este adminstrador?' 
+            onHandleConfirm={() => setOpenConfirm(false)} 
+            onHandleCancelConfirm={() => setOpenConfirm(false)} />
+        ) : null
+      }
 
     </div>
   )

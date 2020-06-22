@@ -1,17 +1,17 @@
 import React, { FunctionComponent } from 'react'
 import PropTypes from 'prop-types'
-// import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { makeStyles, Box, AppBar, Toolbar, Typography, Avatar, Theme, 
-  // Menu, MenuItem, ListItemIcon, ListItemText 
+  MenuItem, ListItemIcon, ListItemText 
 } from '@material-ui/core'
 import { 
-  ExpandMore as ExpandMoreIcon
-  // Person as PersonIcon,
-  // ExitToApp as ExitToAppIcon
+  ExpandMore as ExpandMoreIcon,
+  Person as PersonIcon,
+  ExitToApp as ExitToAppIcon
 } from '@material-ui/icons'
 import { User } from 'reducers/userDucks'
 
-const useStyles = makeStyles(({ palette }: Theme) => ({
+const useStyles = makeStyles(({ palette, zIndex }: Theme) => ({
   appBar: {
     backgroundColor: palette.common.white,
     borderBottom: `solid 1px ${palette.grey[300]}`
@@ -21,7 +21,26 @@ const useStyles = makeStyles(({ palette }: Theme) => ({
     justifyContent: 'flex-end'
   },
   menu: {
-    cursor: 'pointer'
+    cursor: 'pointer',
+    position: 'relative',
+    '&:hover': {
+      '& $menuHover': {
+        display: 'flex'
+      }
+    }
+  },
+  menuHover: {
+    display: 'none',
+    position: 'absolute',
+    top: 40,
+    zIndex: zIndex.appBar,
+    right: 0,
+    flexDirection: 'column',
+    backgroundColor: palette.common.white,
+    boxShadow: '0px 3px 3px -2px rgba(0,0,0,0.2),0px 3px 4px 0px rgba(0,0,0,0.14),0px 1px 8px 0px rgba(0,0,0,0.12)'
+  },
+  menuItem: {
+    color: palette.common.black,
   }
 }))
 
@@ -29,21 +48,12 @@ type HeaderProps = Omit<User, 'email' | 'id'>
 
 const Header: FunctionComponent<HeaderProps> = ({ first_name, last_name, avatar }): JSX.Element => {
   const classes = useStyles()
-  // const history = useHistory()
-  // const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const history = useHistory()
 
-  // const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-  //   setAnchorEl(event.currentTarget)
-  // }
-
-  // const handleClose = () => {
-  //   setAnchorEl(null)
-  // }
-
-  // const handlerLogOut = () => {
-  //   localStorage.removeItem('isLogin')
-  //   history.push('/login')
-  // }
+  const handlerLogOut = () => {
+    localStorage.removeItem('isLogin')
+    history.push('/login')
+  }
 
   return (
     <AppBar className={classes.appBar} position="static">
@@ -56,38 +66,20 @@ const Header: FunctionComponent<HeaderProps> = ({ first_name, last_name, avatar 
           <Box display='flex' className={classes.menu} alignItems='center'>
             <Avatar variant="rounded" src={avatar} />
             <ExpandMoreIcon color="action" />
-            {/* { Boolean(anchorEl) ? (
-              <Menu
-                id="customized-menu"
-                anchorEl={anchorEl}
-                keepMounted
-                elevation={0}
-                getContentAnchorEl={null}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'center',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center',
-                }}
-                open={Boolean(anchorEl)}
-                onClose={handleClose}
-              >
-                <MenuItem onClick={() => history.push('/profile')}>
-                  <ListItemIcon>
-                    <PersonIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText primary="Editar perfil" />
-                </MenuItem>
-                <MenuItem onClick={handlerLogOut}>
-                  <ListItemIcon>
-                    <ExitToAppIcon fontSize="small" />
-                  </ListItemIcon>
-                  <ListItemText primary="Cerrar sesión" />
-                </MenuItem>
-              </Menu>
-            ) : null} */}
+            <div className={classes.menuHover}>
+              <MenuItem  className={classes.menuItem} onClick={() => history.push('/profile')}>
+                <ListItemIcon>
+                  <PersonIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Editar perfil" />
+              </MenuItem>
+              <MenuItem  className={classes.menuItem}  onClick={handlerLogOut}>
+                <ListItemIcon>
+                  <ExitToAppIcon fontSize="small" />
+                </ListItemIcon>
+                <ListItemText primary="Cerrar sesión" />
+              </MenuItem>
+            </div>
           </Box>
         </Box>
       </Toolbar>

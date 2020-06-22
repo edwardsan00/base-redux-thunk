@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useRef } from 'react'
+import React, { FunctionComponent, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useLocation } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
@@ -65,7 +65,6 @@ const Login: FunctionComponent = (): JSX.Element => {
   const dispatch = useDispatch()
   const history = useHistory()
   const location = useLocation()
-  const formLogin = useRef<HTMLFormElement>(null)
   const { status, user } = useSelector((state: RootState) => state.user)
   const { register, handleSubmit, errors } = useForm<Login>()
 
@@ -88,7 +87,7 @@ const Login: FunctionComponent = (): JSX.Element => {
         className={classes.backgroundLogin}
         src="https://images.unsplash.com/photo-1554252116-ee59370d1f66?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1649&q=80" 
         alt="Login" />
-      <form ref={formLogin} onSubmit={onSubmit} className={classes.containerForm}>
+      <form onSubmit={onSubmit} className={classes.containerForm}>
         <Typography align="center" variant="h5">Panel de Administración</Typography>
         <Typography align="center" variant="body1">Ingreso al sistema</Typography>
         <div className={classes.containerInputs}>

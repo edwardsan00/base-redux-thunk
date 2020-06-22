@@ -1,13 +1,20 @@
-import React, { useEffect } from 'react'
-import { makeStyles, TableContainer, Table, TableHead, TableCell, TableRow, Button, TableSortLabel, TableBody, Theme } from '@material-ui/core'
+import React, { useEffect, useState, useRef } from 'react'
+import {
+  makeStyles,
+  FormControl,
+  OutlinedInput,
+  FormHelperText,
+  TableContainer, Table, TableHead, TableCell, TableRow, Button, TableSortLabel, TableBody, Theme, Typography } from '@material-ui/core'
 import {
   Edit as EditIcon,
-  Delete as DeleteIcon
+  Delete as DeleteIcon,
 } from '@material-ui/icons'
+import { useForm } from 'react-hook-form'
 import clsx from 'clsx'
-import { Administrator, getAdministrators } from 'reducers/administratorsDucks'
-import { RootState } from 'reducers'
 import { useSelector, useDispatch } from 'react-redux'
+import { RootState } from 'reducers'
+import { Administrator, getAdministrators } from 'reducers/administratorsDucks'
+import DrawerEdit from 'components/DrawerEdit'
 
 interface HeaderKeys {
   label: string
@@ -68,8 +75,22 @@ const useStyles = makeStyles(({ palette, spacing }: Theme) => ({
   },
   editIcon: {
     marginRight: 15
+  },
+  formEdit: {
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  input: {
+    marginBottom: spacing(2)
+  },
+  labelForm: {
+    marginBottom: spacing(1)
+  },
+  helpText: {
+    marginLeft: 0,
+    color: palette.error.main
   }
-}))
+}), { name: 'Administrators'})
 
 const headerTable: Array<HeaderKeys> = [
   { label: 'ID', sort: true, key: 'id' },
@@ -81,8 +102,31 @@ const headerTable: Array<HeaderKeys> = [
 
 const Adminstrators = () => {
   const classes = useStyles()
+  const { register, errors, handleSubmit } = useForm<Administrator>()
+  const formLogin = useRef<HTMLFormElement>(null)
   const dispatch = useDispatch()
+  const [openDrawer, setOpenDrawer ] = useState(true)
+  const [ editAdmin, setEditAdmin ] = useState<Administrator | null>(null)
   const { administrators } = useSelector((state: RootState) => state.administrators)
+
+  const onSubmit = handleSubmit(({ first_name, last_name, email }) => {
+    console.log("onSubmit -> email", email)
+    console.log("onSubmit -> last_name", last_name)
+    console.log("onSubmit -> first_name", first_name)
+  })
+
+  const handlerToggleDrawer = (id?: number) => {
+    setOpenDrawer(!openDrawer)
+    if(id){
+      const currentAdmin = administrators.find(({ id: idAdmin }) => idAdmin === id ) || null
+      setEditAdmin(currentAdmin)
+    }
+  }
+
+  const handlerEditAdmin = () => {
+    formLogin.current?.dispatchEvent(new Event('submit', { cancelable: true }))
+    setOpenDrawer(!openDrawer)
+  }
 
   useEffect(() => {
     dispatch(getAdministrators())
@@ -110,7 +154,7 @@ const Adminstrators = () => {
                     </TableSortLabel>
                   </TableCell>
                 ))}
-                <TableCell />
+                <TableCell align='center'>Acciones</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -124,7 +168,7 @@ const Adminstrators = () => {
                     <TableCell>{last_name}</TableCell>
                     <TableCell>{email}</TableCell>
                     <TableCell align="center" className={classes.tableCellEdit}>
-                      <EditIcon className={clsx([classes.editIcon, classes.icons])} />
+                      <EditIcon className={clsx([classes.editIcon, classes.icons])} onClick={() => handlerToggleDrawer(id)} />
                       <DeleteIcon className={clsx([classes.icons])} />
                     </TableCell>
                   </TableRow>
@@ -134,6 +178,68 @@ const Adminstrators = () => {
           </Table>
         </TableContainer>
       </div>
+
+      { openDrawer && editAdmin ? (
+        <DrawerEdit 
+          title='Editar Call center' 
+          onHandlerToggleDrawer={handlerToggleDrawer} 
+          onHandlerAction={handlerEditAdmin} 
+          openDrawer={openDrawer}>
+          <form ref={formLogin} onSubmit={onSubmit} className={classes.formEdit}>
+            <FormControl className={classes.input} variant="outlined">
+              <Typography variant='body2' className={classes.labelForm}>First name</Typography>
+              <OutlinedInput
+                defaultValue={editAdmin.first_name}
+                name="first_name"
+                inputRef={register({
+                  required: {
+                    value: true,
+                    message: 'Por favor ingrese su nombre'
+                  }
+                })}
+                margin="dense"
+                type="text"
+                placeholder="Usuario" />
+              {errors?.first_name ? <FormHelperText className={classes.helpText}>{errors.first_name.message}</FormHelperText> : null}
+            </FormControl>
+            <FormControl className={classes.input} variant="outlined">
+              <Typography variant='body2' className={classes.labelForm}>Last name</Typography>
+              <OutlinedInput
+                defaultValue={editAdmin.last_name}
+                name="last_name"
+                inputRef={register({
+                  required: {
+                    value: true,
+                    message: 'Por favor ingrese su apellido'
+                  }
+                })}
+                margin="dense"
+                type="text" />
+              {errors?.last_name ? <FormHelperText className={classes.helpText}>{errors.last_name.message}</FormHelperText> : null}
+            </FormControl>
+            <FormControl className={classes.input} variant="outlined">
+              <Typography variant='body2' className={classes.labelForm}>Email</Typography>
+              <OutlinedInput
+                defaultValue={editAdmin.email}
+                name="email"
+                inputRef={register({
+                  required: {
+                    value: true,
+                    message: 'Por favor ingrese su correo electronico'
+                  },
+                  pattern: {
+                    value: /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i,
+                    message: 'Debe ser un correo electronico'
+                  }
+                })}
+                margin="dense"
+                type="text" />
+              {errors?.email ? <FormHelperText className={classes.helpText}>{errors.email.message}</FormHelperText> : null}
+            </FormControl>
+          </form>
+        </DrawerEdit>
+      ) : null }
+
     </div>
   )
 }

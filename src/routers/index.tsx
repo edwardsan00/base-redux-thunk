@@ -23,11 +23,9 @@ const Users = loadable(() => import('../containers/View/Callcenter/Users'), {
   fallback: <Loading />
 })
 
-
 const Adminstrators = loadable(() => import('../containers/View/Administrators'), {
   fallback: <Loading />
 })
-
 
 const Profile = loadable(() => import('../containers/View/Profile'), {
   fallback: <Loading />
@@ -40,7 +38,6 @@ const Login = loadable(() => import('../containers/View/Login'), {
 const NotFound = loadable(() => import('../containers/View/NotFound'), {
   fallback: <Loading />
 })
-
 
 const RouterMain = () => {
   return (

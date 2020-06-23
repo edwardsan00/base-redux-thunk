@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect } from 'react'
+import React, { FunctionComponent, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import clsx from 'clsx'
 import { makeStyles, Typography, ExpansionPanelDetails, Theme, withStyles } from '@material-ui/core'

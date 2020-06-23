@@ -9,12 +9,12 @@ export interface Administrator {
   avatar: string;
 }
 
-export interface BaseReducer {
+export interface AdministratorsState {
   administrators: Array<Administrator>;
   status: StatusValue;
 }
 
-const initialState: BaseReducer = {
+const initialState: AdministratorsState = {
   administrators: [],
   status: Status.NEW,
 };
@@ -29,7 +29,7 @@ const failedRequest = () => {
 
 type UserAction = ReturnType<typeof resolveGetAdministrators | typeof failedRequest>;
 
-const userReducer = (state = initialState, action: UserAction): BaseReducer => {
+const userReducer = (state = initialState, action: UserAction): AdministratorsState => {
   switch (action.type) {
     case "FETCH_ADMINISTRATORS":
       return {

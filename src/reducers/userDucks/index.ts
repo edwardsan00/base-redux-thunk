@@ -8,12 +8,12 @@ export interface User {
   email: string;
   avatar: string;
 }
-export interface BaseReducer {
+export interface UserState {
   user: User;
   status: StatusValue;
 }
 
-const initialState: BaseReducer = {
+const initialState: UserState = {
   user: {
     id: null,
     first_name: '',
@@ -37,7 +37,7 @@ type UserAction = ReturnType<typeof resolveGetUser | typeof failedRequest>
 const userReducer = (
   state = initialState,
   action: UserAction
-): BaseReducer => {
+): UserState => {
   switch (action.type) {
     case "FETCH_USER":
       return {

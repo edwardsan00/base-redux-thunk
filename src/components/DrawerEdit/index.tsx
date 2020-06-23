@@ -41,6 +41,9 @@ const useStyles = makeStyles(({ spacing, palette }: Theme) => ({
   },
   button: {
     marginLeft: spacing(1),
+  },
+  closeBtn: {
+    cursor: 'pointer'
   }
 }), { name: 'DrawerEdit' })
 
@@ -52,7 +55,7 @@ const DrawerEdit: FunctionComponent<Props> = ({ onHandlerToggleDrawer, onHandler
         <div className={classes.body}>
           <div className={classes.header}>
             <Typography variant='body1'>{ title }</Typography>
-            <CloseIcon onClick={onHandlerToggleDrawer} />
+            <CloseIcon className={classes.closeBtn} onClick={onHandlerToggleDrawer} />
           </div>
           <Divider />
           <div className={classes.container}>

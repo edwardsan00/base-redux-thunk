@@ -1,28 +1,36 @@
-import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
-import thunk from 'redux-thunk'
+import { createStore, combineReducers, applyMiddleware, compose, Store } from 'redux'
+import { History } from 'history'
+import { connectRouter, RouterState } from 'connected-react-router'
+import { middlewares, history } from './config'
+import { UserState } from './userDucks'
+import { AdministratorsState } from './administratorsDucks'
 
 import userReducer from './userDucks'
 import administratorsReducer from './administratorsDucks'
 
-const rootReducer = combineReducers({
-  user: userReducer,
-  administrators: administratorsReducer
-})
 
-const middlewares = [thunk]
+export type RootState = Readonly<{
+  router: RouterState;
+  user: UserState;
+  administrators: AdministratorsState;
+}>;
 
-if (process.env.NODE_ENV === `development`) {
-  const { logger } = require(`redux-logger`)
+const rootReducer = (history: History) =>
+  combineReducers<RootState>({
+    router: connectRouter(history),
+    user: userReducer,
+    administrators: administratorsReducer,
+  });
 
-  middlewares.push(logger)
-}
+const generateStore = (): Store<RootState>  => {
+  const store = createStore(rootReducer(history), compose(applyMiddleware(...middlewares)))
+  if (module.hot) {
+    module.hot.accept("./", () => {
+      store.replaceReducer(rootReducer(history))
+    });
+  }
 
-
-const generateStore = () => {
-  const store = createStore(rootReducer, compose(applyMiddleware(...middlewares)))
   return store
 }
-
-export type RootState = ReturnType<typeof rootReducer>;
 
 export default generateStore
